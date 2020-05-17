@@ -13,7 +13,7 @@ if(data){
     loadList(LIST);
 }
 else{
-    LIST = [];
+    LIST = []; 
     id = 0;
 }
 
