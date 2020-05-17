@@ -3,56 +3,116 @@ const list = document.querySelector(".ulli");
 const input = document.querySelector(".input");
 const trash = document.querySelector(".trash");
 
+let LIST, id;
+
+//get item
+let data = localStorage.getItem("todo");
+if(data){
+    LIST = JSON.parse(data);
+    id = LIST.length;
+    loadList(LIST);
+}
+else{
+    LIST = [];
+    id = 0;
+}
+
+function loadList(array) {
+    array.forEach(function(item) {
+        addItem(item.id, item.text, item.complete, item.isDeleted);
+    });
+}
 
 buttonadd.addEventListener("click", function() {
-    addItem();
+        const todo = input.value;
+        if(todo){
+        addItem(id, todo, false, false);       
+        LIST.push({
+            id: id,
+            text: todo,
+            complete: false,
+            isDeleted: false         
+        });
+        localStorage.setItem("todo", JSON.stringify(LIST));
+        id++;
+        }
+        input.value = "";
 }, false);
 
 document.addEventListener("keyup", function(e){
     if(e.keyCode == 13){
-        addItem();
+        const todo = input.value;
+        if(todo){
+        addItem(id, todo, false, false);
+
+        LIST.push({
+            id: id,
+            text: todo,
+            complete: false,
+            isDeleted: false
+            
+        });
+        id++;
+        localStorage.setItem("todo", JSON.stringify(LIST));        
+        }
+        input.value = "";
     }
     
 }, false)
 
 
-
 list.addEventListener("click", function(event){
-    let element = event.target;
-    console.log(element)
-    if (element.className == "far fa-trash-alt"){
+    const element = event.target;
+    const elementJob = element.attributes.job.value;
+    console.log(elementJob)
+    
+    if (elementJob == "delete"){
         deleteItem(element);
+            
     }
-   
-    if (element.className == "far fa-circle"){
-       element.className = "far fa-check-circle";
-       element.parentNode.className = "checked";
+    if (elementJob == "complete"){
+        const element = event.target;
+        completeTodo(element);
     }
-   
-
 })
-function addItem(){  
-    const text = `<li class="unchecked">                   
-                    <span>${input.value}</span>
-                    <i class="far fa-trash-alt"></i>
-                    <i class="far fa-circle"></i>
+function addItem(id, inp, completed, isDeleted){  
+    let DONE = "";
+    let CHECK = "";
+    if(isDeleted) { return; }
+    if (completed){
+        DONE = "check-";
+        CHECK = "non";
+    }
+    
+    const text = `<li class="${CHECK}unchecked">                   
+                    <span>${inp}</span>
+                    <i class="far fa-trash-alt" job="delete" id=${id}></i>
+                    <i class="far fa-${DONE}circle" job="complete" id="${id}"></i>
                     
                            
                 </li>`
 
     const pos = "afterbegin"
-
-    if(input.value !== ''){
-
     list.insertAdjacentHTML(pos, text);
-    }
-    input.value = '';
+  
 }
 
-function deleteItem(element){
-    console.log(element.parentNode);
-    console.log(element.parentNode.parentNode);
-    
-      
-    element.parentNode.parentNode.removeChild(element.parentNode);
+function completeTodo(element){
+    element.className = "far fa-check-circle";
+    element.parentNode.className = "nonunchecked";
+    LIST[element.id].complete = true;
+    localStorage.setItem("todo", JSON.stringify(LIST));
 }
+
+function deleteItem(element){     
+    element.parentNode.parentNode.removeChild(element.parentNode);
+    LIST[element.id].isDeleted = true;
+    localStorage.setItem("todo", JSON.stringify(LIST));
+    LIST.forEach(function(todo){
+        if(todo.isDeleted == true){
+            localStorage.removeItem("todo");
+        }
+    })
+}
+
+
