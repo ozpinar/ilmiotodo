@@ -107,12 +107,7 @@ function completeTodo(element){
 function deleteItem(element){     
     element.parentNode.parentNode.removeChild(element.parentNode);
     LIST[element.id].isDeleted = true;
-    localStorage.setItem("todo", JSON.stringify(LIST));
-    LIST.forEach(function(todo){
-        if(todo.isDeleted == true){
-            localStorage.removeItem("todo");
-        }
-    })
+    localStorage.setItem("todo", JSON.stringify(LIST));  
 }
 
 
