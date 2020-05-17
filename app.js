@@ -13,7 +13,7 @@ if(data){
     loadList(LIST);
 }
 else{
-    LIST = []; 
+    LIST = [];
     id = 0;
 }
 
@@ -107,7 +107,12 @@ function completeTodo(element){
 function deleteItem(element){     
     element.parentNode.parentNode.removeChild(element.parentNode);
     LIST[element.id].isDeleted = true;
-    localStorage.setItem("todo", JSON.stringify(LIST));  
+    for(let i = 0; i< LIST.length; i++){
+        if(LIST[i].isDeleted === true){
+            LIST.splice(i, 1);
+        }
+    }
+    localStorage.setItem("todo", JSON.stringify(LIST));
 }
 
 
