@@ -88,9 +88,8 @@ h1 {
     font-size: 1em;
     text-align: center;
     -webkit-appearance: none;
-
-    
-    
+    -moz-appearance: none;
+    appearance: none;   
 }
 
 .but:active{
