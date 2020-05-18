@@ -17,10 +17,22 @@ else{
     id = 0;
 }
 
+function checkList(array){
+    let isDeletedList = [];
+    array.forEach(function(item){
+        isDeletedList.push(item.isDeleted);
+    })
+    let checker = arr => arr.every(v => v === true);
+    if(checker(isDeletedList)){
+        localStorage.removeItem("todo");
+    }
+}
+
 function loadList(array) {
     array.forEach(function(item) {
         addItem(item.id, item.text, item.complete, item.isDeleted);
-    });
+    }); 
+    checkList(array);
 }
 
 buttonadd.addEventListener("click", function() {
@@ -71,7 +83,6 @@ list.addEventListener("click", function(event){
             
     }
     if (elementJob == "complete"){
-        const element = event.target;
         completeTodo(element);
     }
 })
@@ -100,19 +111,25 @@ function addItem(id, inp, completed, isDeleted){
 function completeTodo(element){
     element.className = "far fa-check-circle";
     element.parentNode.className = "nonunchecked";
+    console.log(element.id);
+    console.log(LIST.indexOf(element.id));
     LIST[element.id].complete = true;
+    
     localStorage.setItem("todo", JSON.stringify(LIST));
 }
 
+function checker(element){
+    return element;
+}
+
+
 function deleteItem(element){     
     element.parentNode.parentNode.removeChild(element.parentNode);
+    if(LIST[element.id]){
     LIST[element.id].isDeleted = true;
-    for(let i = 0; i< LIST.length; i++){
-        if(LIST[i].isDeleted === true){
-            LIST.splice(i, 1);
-        }
-    }
     localStorage.setItem("todo", JSON.stringify(LIST));
+}
+    
 }
 
 
